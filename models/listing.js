@@ -9,43 +9,59 @@ const listingSchema = new Schema({
   },
   description: String,
   image: {
-    url : String,
-    filename : String,
+    url: String,
+    filename: String,
   },
   price: Number,
   location: String,
   country: String,
-  reviews : [
+  reviews: [
     {
-      type : Schema.Types.ObjectId,
-      ref : "Review",
-    }
+      type: Schema.Types.ObjectId,
+      ref: "Review",
+    },
   ],
-  owner : {
-    type : Schema.Types.ObjectId,
-    ref : "User",
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
   },
-  geometry : {
+  geometry: {
     type: {
       type: String,
-      enum: ['Point'], // 'location.type' must be 'Point'
-      required: true
+      enum: ["Point"], // 'location.type' must be 'Point'
+      required: true,
     },
     coordinates: {
       type: [Number],
-      required: true
-    }
+      required: true,
+    },
   },
-  // category:{
-  //   type: String,
-  //   enum: ["Trending","Rooms","Iconic cities","Mountains","Castles","Amazing pools","Camping","Farms","Arctic"],
-  // }
+  category: {
+    type: String,
+    enum: [
+      "Nature",
+      "Mountains",
+      "Farms",
+      "Historical",
+      "Beach",
+      "Camping",
+      "Desert",
+      "City",
+      "Lake",
+      "Adventure",
+      "Religious",
+      "Luxury",
+      "Wildlife",
+      "Other",
+    ],
+    default: "Other",
+  },
 });
 
-listingSchema.post("findOneAndDelete",async(listing) => {
+listingSchema.post("findOneAndDelete", async (listing) => {
   console.log("middleware is executed!");
-  if(listing){
-    await Review.deleteMany({ _id : {$in : listing.reviews}})
+  if (listing) {
+    await Review.deleteMany({ _id: { $in: listing.reviews } });
   }
 });
 
